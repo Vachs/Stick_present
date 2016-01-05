@@ -220,6 +220,9 @@ void show_beat(){
   
 };
 
+void lewo(){
+  show(byte_left);
+}
 /*
  * Odpowiada za wyświetlanie danych po kolei
  * param toshow[] bitowa tablica potrzebna do wyświetlania dancyh na 8x8
