@@ -13,7 +13,7 @@ int fadeRate = 0;                 // used to fade LED on with PWM on fadePin
 int LEFT = 70;
 int RIGHT = 145;
 int CENTER = (LEFT+RIGHT)/2;
-int pos = CENTER;
+int pos = 0;
 
 
 // Volatile Variables, used in the interrupt service routine!
@@ -43,7 +43,8 @@ void setup()
   //   analogReference(EXTERNAL);
 
   // doczepiam servo 
-  myservo.attach(9);                // podpięte pod 9 PIN PWN
+  myservo.attach(9);                // pod    pięte pod 9 PIN PWN
+  myservo.write(CENTER);
 
   lc.shutdown(0, false); // Wake up displays
   lc.shutdown(1, false);
@@ -60,7 +61,8 @@ void setup()
 
 void loop()
 {
-  magicGoes();
+  demo();
+  //magicGoes();
   //show_heartoff;
 }
 
@@ -92,7 +94,10 @@ void magicGoes() {
   delay(20);                             //  take a break
 }
 
-
+void demo(){
+  myservo.write(60);
+  lewo();
+}
 void goleft(){
   for(pos = LEFT; pos <= RIGHT; pos += 1) // goes from 0 degrees to 180 degrees 
   {                                  // in steps of 1 degree 
