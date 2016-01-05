@@ -55,14 +55,27 @@ void setup()
 
   // pokaz wiadomosc powitalna
   //welcome_msg();
+  delay(2000);
+  welcomeload();
+  phoneanim();
+  gpsanim();
 }
 
 
 
 void loop()
 {
-  demo();
-  //magicGoes();
+  for(int i=0; i <=100; i++){
+  magicGoes();};
+  liczbaanim();
+  delay(2000);
+    //helpanim();
+  lewo();
+  delay(2000);
+  fora();
+  delay(5000);
+  
+  
   //show_heartoff;
 }
 
