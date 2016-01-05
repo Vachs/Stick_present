@@ -43,7 +43,7 @@ void setup()
   //   analogReference(EXTERNAL);
 
   // doczepiam servo 
-  myservo.attach(9);                // podpięte pod 9 PIN PWN
+  myservo.attach(9);                // pod  pięte pod 9 PIN PWN
 
   lc.shutdown(0, false); // Wake up displays
   lc.shutdown(1, false);
