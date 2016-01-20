@@ -304,6 +304,7 @@ byte msg5[] {
   B11100100
 };
 
+/* animacja jesli osoba zle sie poczuje */
 void helpanim() {
   show(msg);
   delay(300);
@@ -405,6 +406,17 @@ byte okay[]{
   B00000000
 };
 
+byte nookay[]{
+  B00000000,
+  B11000011,
+  B01100011,
+  B00110110,
+  B00011110,
+  B00001110,
+  B00011011,
+  B00110001
+};
+
 void phoneanim() {
   for (int i = 0; i < 2; i++) {
     show(phone1);
@@ -413,6 +425,17 @@ void phoneanim() {
     delay(600);
   }
   show(okay);
+  delay(800);
+};
+
+void phoneanimbad() {
+  for (int i = 0; i < 2; i++) {
+    show(phone1);
+    delay(600);
+    show(phone2);
+    delay(600);
+  }
+  show(nookay);
   delay(800);
 };
 
@@ -505,13 +528,36 @@ void show_beat() {
 
 
 };
+void dollewo() {
+  show(byte_downleft);
+}
 
-void lewo() {
+void lewo(){
+  show(byte_left);
+}
+
+void goralewo() {
   show(byte_upleft);
 }
 
-void fora() {
+void przod() {
   show(byte_fow);
+}
+
+void goraprawo() {
+  show(byte_upright);
+}
+
+void prawo() {
+  show(byte_right);
+}
+
+void dolprawo() {
+  show(byte_downright);
+}
+
+void turnallOFF(){
+  show(byte_turnOFF);
 }
 /*
  * Odpowiada za wyświetlanie danych po kolei
@@ -555,4 +601,3 @@ void welcome_msg()
   show(byte_turnOFF);
 
 }
-

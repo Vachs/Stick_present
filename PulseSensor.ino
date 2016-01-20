@@ -17,6 +17,18 @@ void serialOutputWhenBeatHappens(){
 
     // Put #1 frame on both Display
     show_beat();
+    if(BPM > 50 && BPM <= 60) showhr50();
+    else if(BPM > 60 && BPM <= 70) showhr60();
+    else if(BPM > 70 && BPM <= 80) showhr70();
+    else if(BPM > 80 && BPM <= 90) showhr80();
+    else if(BPM > 90 && BPM <= 100) showhr90();
+    else if(BPM > 100 && BPM <= 110) showhr100();
+    else if(BPM > 110 && BPM <= 120) showhr110();
+    else if(BPM > 120 && BPM <= 130) showhr120();
+    else if(BPM > 130 && BPM <= 140) showhr130();
+    else if(BPM > 140 && BPM <= 150) showhr140();
+    else if(BPM > 150 && BPM <= 170) showhr150();
+
 
 
  } else{
