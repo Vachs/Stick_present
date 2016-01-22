@@ -424,8 +424,16 @@ void phoneanim() {
     show(phone2);
     delay(600);
   }
-  show(okay);
-  delay(800);
+  //show(okay);
+  //delay(800);
+};
+
+void showOK() {
+    show(phone1);
+    delay(400);
+    show(okay);
+    delay(800);
+    turnallOFF(); 
 };
 
 void phoneanimbad() {

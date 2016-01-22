@@ -13,6 +13,7 @@ void serialOutputWhenBeatHappens(){
     Serial.print("*** Heart-Beat Happened *** ");  //ASCII Art Madness
     Serial.print("BPM: ");
     Serial.print(BPM);
+    mySerial.print("#"+BPM);
     Serial.print("  ");
 
     // Put #1 frame on both Display

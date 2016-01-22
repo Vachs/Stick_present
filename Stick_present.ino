@@ -5,20 +5,24 @@
 #include <SoftwareSerial.h>
 #include "LedControl.h"
 #include "Servo.h"
+
+
 //  Variables
 int pulsePin = 0;                 // Pulse Sensor purple wire connected to analog pin 0
 int blinkPin = 13;                // pin to blink led at each beat
 int statePin = 7;
 int fadePin = 5;                  // pin to do fancy classy fading blink at each beat
 int fadeRate = 0;                 // used to fade LED on with PWM on fadePin
+int pinphone =6;
+
 
 int LEFT = 70;
 int RIGHT = 145;
 int CENTER = (LEFT+RIGHT)/2;
 int pos = 0;
-
+int stala = 200;
 int wait = 0; // potrzebne do wykrywania połączenia z telefonem
-
+int heartPin = 1;
 String command = ""; // Stores response of the HC-06 Bluetooth device
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
@@ -30,23 +34,37 @@ volatile boolean QS = false;        // becomes true when Arduoino finds a beat.
 char inbyte = 0;
 
 // czy debugować
-int DEBUG = 1;
+int DEBUG = 0;
 
 // SERVO
 Servo myservo;                      // tworzy obiekt serwo do sterowania wychylaniem się trzpienia z rączki
 SoftwareSerial mySerial(4, 2); // RX, TX
+
 // Regards Serial OutPut  -- Set This Up to your needs
 static boolean serialVisual = true;   // Set to 'false' by Default.  Re-set to 'true' to see Arduino Serial Monitor ASCII Visual Pulse
+
 
 
 LedControl lc = LedControl(12, 11, 10, 2); // Definicja pinów dla wyświetlania
 
 void setup()
-{
+{  
+  /*
+  gyroscope.begin();
+      // Kalibracja żyroskopu. Powinna odbywać się w spoczynku zerowym
+  gyroscope.calibrate();
+ 
+  // Ustawiamy próg czułości na 3.
+  gyroscope.setThreshold(3);
+  */
   pinMode(statePin, INPUT);
   pinMode(blinkPin, OUTPUT);        // pin that will blink to your heartbeat!
   pinMode(fadePin, OUTPUT);         // pin that will fade to your heartbeat!
-  Serial.begin(36800);             // we agree to talk fast!
+  pinMode(pinphone, INPUT);
+  pinMode(heartPin, OUTPUT);
+  digitalWrite(heartPin, LOW);
+  Serial.begin(115200);             // we agree to talk fast!
+  mySerial.begin(115200);
   interruptSetup();                 // sets up to read Pulse Sensor signal every 2mS
   // IF YOU ARE POWERING The Pulse Sensor AT VOLTAGE LESS THAN THE BOARD VOLTAGE,
   // UN-COMMENT THE NEXT LINE AND APPLY THAT VOLTAGE TO THE A-REF PIN
@@ -64,7 +82,8 @@ void setup()
   lc.clearDisplay(1);
 
   // ustawia Serial i mySerial aby dzialalo jak powinno
-  ser();
+  //ser();
+  //gyro.begin(L3G4200D_2000DPS);
 
   // pokaz wiadomosc powitalna
   //welcome_msg(); ta buzka nie jest potrzebna
@@ -88,36 +107,58 @@ void setup()
 
 
 void loop()
-{;
+{  
+int pinpp = digitalRead(pinphone);
+if(pinpp != LOW){
   // Read device output if available.
   if (mySerial.available()) {
     while(mySerial.available()) { // While there is more to be read, keep reading.
-      command += (char)mySerial.read();
+       command += (char)mySerial.read();
+       
        String help = "";
+
+       
+       
       // show must go on
+      
       if(command =="10"){
           dollewo();
-          myservo.write(70);}
+          myservo.write(60);
+          delay(stala);}
       else if(command == "11"){
           lewo();
-          myservo.write(82);}
+          myservo.write(72);
+          delay(stala);}
       else if(command == "12"){
           goralewo();
-          myservo.write(94);}
+          myservo.write(88);
+          delay(stala);} 
       else if(command == "13"){
           przod();
-          myservo.write(106);}
+          myservo.write(106);
+          delay(stala);}
       else if(command == "14"){
           goraprawo();
-          myservo.write(118);}
+          myservo.write(118);
+          delay(stala);}
       else if(command == "15"){
           prawo();
           myservo.write(130);
-          magicGoes();}
+          //magicGoes();
+          delay(stala);}
       else if(command == "16"){
           dolprawo();
           myservo.write(145);
-        }
+          delay(stala);
+        }else if(command == "22"){
+          helpanim();
+        }else if(command == "33"){
+          digitalWrite(heartPin, HIGH);
+          magicGoes();
+        }else if(command == "44"){
+          showOK();
+        }//else turnallOFF();
+        
 
     }
     Serial.println(command);
@@ -129,6 +170,7 @@ void loop()
     delay(10); // The delay is necessary to get this working!
     mySerial.write(Serial.read());
   }
+}else phoneanim();
 }
 
 /* Poprawia to co popsuł producent */
