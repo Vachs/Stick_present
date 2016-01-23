@@ -13,16 +13,16 @@ int blinkPin = 13;                // pin to blink led at each beat
 int statePin = 7;
 int fadePin = 5;                  // pin to do fancy classy fading blink at each beat
 int fadeRate = 0;                 // used to fade LED on with PWM on fadePin
-int pinphone =6;
+int pinphone = 8;
 
 
-int LEFT = 70;
+int LEFT = 85;
 int RIGHT = 145;
-int CENTER = (LEFT+RIGHT)/2;
+int CENTER = 115;
 int pos = 0;
 int stala = 200;
 int wait = 0; // potrzebne do wykrywania połączenia z telefonem
-int heartPin = 1;
+int heartPin = 0;
 String command = ""; // Stores response of the HC-06 Bluetooth device
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
@@ -48,12 +48,12 @@ static boolean serialVisual = true;   // Set to 'false' by Default.  Re-set to '
 LedControl lc = LedControl(12, 11, 10, 2); // Definicja pinów dla wyświetlania
 
 void setup()
-{  
+{
   /*
   gyroscope.begin();
       // Kalibracja żyroskopu. Powinna odbywać się w spoczynku zerowym
   gyroscope.calibrate();
- 
+
   // Ustawiamy próg czułości na 3.
   gyroscope.setThreshold(3);
   */
@@ -71,7 +71,7 @@ void setup()
   //   analogReference(EXTERNAL);
 
   // doczepiam servo
-  myservo.attach(9);                // pod    pięte pod 9 PIN PWN
+  myservo.attach(6);                // pod    pięte pod 9 PIN PWN
   myservo.write(CENTER);
 
   lc.shutdown(0, false); // Wake up displays
@@ -87,7 +87,7 @@ void setup()
 
   // pokaz wiadomosc powitalna
   //welcome_msg(); ta buzka nie jest potrzebna
-  if(DEBUG != 1){
+  if (DEBUG != 1) {
     // ekran wczytywania
     welcomeload();
     // animacja szukania telefonu
@@ -107,74 +107,80 @@ void setup()
 
 
 void loop()
-{  
-int pinpp = digitalRead(pinphone);
-if(pinpp != LOW){
-  // Read device output if available.
-  if (mySerial.available()) {
-    while(mySerial.available()) { // While there is more to be read, keep reading.
-       command += (char)mySerial.read();
-       
-       String help = "";
+{
+  int pinpp = digitalRead(pinphone);
+  if (pinpp != LOW) { //TODO w druga storn
+    // Read device output if available.
+    if (mySerial.available()) {
+      while (mySerial.available()) { // While there is more to be read, keep reading.
+        command += (char)mySerial.read();
 
-       
-       
-      // show must go on
-      
-      if(command =="10"){
+        String help = "";
+
+
+
+        // show must go on
+
+        if (command == "10") {
           dollewo();
           myservo.write(60);
-          delay(stala);}
-      else if(command == "11"){
+          delay(stala);
+        }
+        else if (command == "11") {
           lewo();
           myservo.write(72);
-          delay(stala);}
-      else if(command == "12"){
+          delay(stala);
+        }
+        else if (command == "12") {
           goralewo();
           myservo.write(88);
-          delay(stala);} 
-      else if(command == "13"){
+          delay(stala);
+        }
+        else if (command == "13") {
           przod();
           myservo.write(106);
-          delay(stala);}
-      else if(command == "14"){
+          delay(stala);
+        }
+        else if (command == "14") {
           goraprawo();
           myservo.write(118);
-          delay(stala);}
-      else if(command == "15"){
+          delay(stala);
+        }
+        else if (command == "15") {
           prawo();
           myservo.write(130);
           //magicGoes();
-          delay(stala);}
-      else if(command == "16"){
+          delay(stala);
+        }
+        else if (command == "16") {
           dolprawo();
           myservo.write(145);
           delay(stala);
-        }else if(command == "22"){
+        } else if (command == "22") {
           helpanim();
-        }else if(command == "33"){
+        } else if (command == "33") {
           digitalWrite(heartPin, HIGH);
           magicGoes();
-        }else if(command == "44"){
+        } else if (command == "44") {
           showOK();
         }//else turnallOFF();
-        
 
+
+      }
+      Serial.println(command);
+      command = ""; // No repeats
     }
-    Serial.println(command);
-    command = ""; // No repeats
-  }
 
-  // Read user input if available.
-  if (Serial.available()){
-    delay(10); // The delay is necessary to get this working!
-    mySerial.write(Serial.read());
-  }
-}else phoneanim();
+    // Read user input if available.
+    if (Serial.available()) {
+      delay(10); // The delay is necessary to get this working!
+      mySerial.write(Serial.read());
+    }
+  } else phoneanim();
 }
 
 /* Poprawia to co popsuł producent */
-void ser(){
+void ser() {
   // Open serial communications:
   Serial.begin(9600);
   Serial.println("Type AT commands!");
@@ -223,14 +229,14 @@ void ser(){
 }
 
 /* wykrywanie czy moduł jest sparowany z BT */
-void telefunken(){
+void telefunken() {
   int button = digitalRead(statePin);
-  if(button){
+  if (button) {
     wait++;
-    if(wait == 100){
+    if (wait == 100) {
       phoneanim();
     }
-  }else wait = 0;
+  } else wait = 0;
 
 }
 
@@ -245,10 +251,10 @@ void ledFadeToBeat() {
 * funkcja odpowiadająca za działanie całej magii związanej z sercem :v
 */
 void magicGoes() {
-  for(int i = 0; i <= 100; i++){
+  for (int i = 0; i <= 100; i++) {
     Serial.print(i);
     serialOutput() ;
-    
+
 
     //if (QS == true && BPM <= 160){     // A Heartbeat Was Found
     if (QS == true) {    // A Heartbeat Was Found
@@ -267,21 +273,21 @@ void magicGoes() {
   }
 }
 
-void demo(){
+void demo() {
   myservo.write(60);
   lewo();
 }
-void goleft(){
-  for(pos = LEFT; pos <= RIGHT; pos += 1) // goes from 0 degrees to 180 degrees
-  {                                  // in steps of 1 degree
+void goleft() {
+  for (pos = LEFT; pos <= RIGHT; pos += 1) // goes from 0 degrees to 180 degrees
+  { // in steps of 1 degree
     myservo.write(pos);              // tell servo to go to position in variable 'pos'
     delay(5);                       // waits 15ms for the servo to reach the position
   }
 }
 
-void goright(){
-  for(pos = RIGHT; pos <= LEFT; pos -= 1) // goes from 0 degrees to 180 degrees
-  {                                  // in steps of 1 degree
+void goright() {
+  for (pos = RIGHT; pos <= LEFT; pos -= 1) // goes from 0 degrees to 180 degrees
+  { // in steps of 1 degree
     myservo.write(pos);              // tell servo to go to position in variable 'pos'
     delay(5);                       // waits 15ms for the servo to reach the position
   }
